@@ -1,6 +1,11 @@
 %  加密过程   BY 198994@seu.edu.co
-path = 'C:\Users\wy\Desktop\4\BOSSbase_1.01\2.pgm';
+%   混乱过程  尚需要改进  方法来自 量子混沌与折叠算法的图像加密系统———金聪
+%   北邮写的
+path =  'C:\Users\wy\Desktop\4\CML_11.018\1.jpg';
+
+% path = 'C:\Users\wy\Desktop\4\BOSSbase_1.01\2.pgm';
 img = imread(path);
+img = img (1:512,1:512,2);   %  only read img G panel
 figure(1)
 hold on ;
 subplot(1,3,1); imshow(img); 
@@ -36,9 +41,9 @@ P1(257:end,1:end)=Bh; % 下半部分
 
 Qrt = reshape(Qth(:,2),512,512);  %  混沌矩阵
 Qrt=mod(round(Qrt*100),255);
-
-Rt = P1;
-Lb = P1;
+% triu and tril 上三角矩阵和下三角矩阵
+Rt = triu(P1);
+Lb = tril(P1);
 % 从右上往左下 开始置乱
 for i = 1:N
     for j = i+1:N
@@ -47,12 +52,55 @@ for i = 1:N
     end
 end
 figure(3); hold on ;
-subplot(121); imshow(Rt);
-subplot(122); imshow(Lb);
+subplot(131); imshow(Rt);
+subplot(132); imshow(Lb);
+
+P2=triu(Rt)+tril(Lb,-1);
+subplot(133); imshow(P2);
 % 提取右上和左下的元素
 
 % 从右往左 置乱
+Qrh= chaotic_value(:,3);
+Qrh = reshape(Qrh,512,512);
+Qrh= mod(round(Qrh*100),255);
 
-% 从上左到下右 置乱
+% Lh = P2(1:end,1:N/2);
+% Rh = P2(1:end,N/2+1:end);
+Lh = P2;
+Rh = P2;
 
+for i = 1:N 
+    for j = N/2+1:N
+    Rh(i,j)=bitxor(Rh(i,j),Qrh(i,j));
+    Lh(i,N-j+1) = bitxor(Lh(i,j),Rh(i,N-j+1));
+    end
+end
+figure(4); hold on;
+subplot(131);imshow(Rh);
+subplot(132);imshow(Lh);
+P3 = uint8(zeros(N,N));
+P3(1:end,1:N/2)=Lh(1:end,1:N/2);
+P3(1:end,N/2+1:end)=Rh(1:end,N/2+1:end);
+subplot(133);imshow(P3);
+% 从右下到左上折叠
+Qrb = chaotic_value(:,4);
+Qrb = reshape(Qrb,512,512);
+Qrb = mod(round(Qrb*100),255);
+P3 = rot90(P3,2);
+Lt= triu(P3);
+Rb= tril(P3);
+for i = 1:N
+    for j=N-i+2:N
+    Rb(i,j)=bitxor(Rb(i,j),Qrb(i,j));
+    Lt(i,j)=bitxor(Rb(j,i),Lt(i,j));
+    end
+end
+
+
+figure(5); hold on;
+subplot(131);imshow(Lt);
+subplot(132);imshow(Rb);
+P4 = uint8(zeros(N,N));
+P4=triu(Lt)+tril(Rb,-1);
+subplot(133);imshow(P4);
 
