@@ -11,7 +11,7 @@ hold on ;
 subplot(1,3,1); imshow(img); 
 [img_row, img_col]=size(img);  % 测量图片大小，为衡量次数
 chaotic_value = CML_last(4,0.26,5,img_row*img_col);   % get chaotic_value 
-% 从上到下 置乱  % up to down
+% 从上到下 扩散  % up to down
 % 设置4*4矩阵   % set up 4*4 matrix
 Th=img(1:img_row/2,1:end);  % 图像的上半部分
 subplot(1,3,2); imshow(Th); 
@@ -34,7 +34,7 @@ end
 figure(2); hold on ;
 subplot(121);imshow(Th);
 subplot(122); imshow(Bh);
-% 从右上往左下 置乱
+% 从右上往左下 扩散
 P1= uint8(zeros(N,N));  % 设置从上到下的密文同等大小矩阵
 P1(1:256,1:end)=Th;  % 上半部分
 P1(257:end,1:end)=Bh; % 下半部分
@@ -44,7 +44,7 @@ Qrt=mod(round(Qrt*100),255);
 % triu and tril 上三角矩阵和下三角矩阵
 Rt = triu(P1);
 Lb = tril(P1);
-% 从右上往左下 开始置乱
+% 从右上往左下 开始扩散
 for i = 1:N
     for j = i+1:N
     Rt(i,j) = bitxor(Rt(i,j),Qrt(i,j));
@@ -59,7 +59,7 @@ P2=triu(Rt)+tril(Lb,-1);
 subplot(133); imshow(P2);
 % 提取右上和左下的元素
 
-% 从右往左 置乱
+% 从右往左 扩散
 Qrh= chaotic_value(:,3);
 Qrh = reshape(Qrh,512,512);
 Qrh= mod(round(Qrh*100),255);
@@ -103,4 +103,7 @@ subplot(132);imshow(Rb);
 P4 = uint8(zeros(N,N));
 P4=triu(Lt)+tril(Rb,-1);
 subplot(133);imshow(P4);
+% 开始进行置乱编写
+
+
 
