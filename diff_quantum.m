@@ -46,32 +46,36 @@ for i = 1: x
 end
 disp("setp 2 have finished!! L bit scraming");
 %  显示图片  
-% 循环移位   bitshif 会导致溢出问题
+% 循环移位   bitshif 会导致溢出
 result_new_bin_p4 =  circshift(uint8(bin2dec(new_bin_p4)),4);
- result_new_bin_p4 = reshape(result_new_bin_p4,x,y,z);
+% [result_new_bin_p4,index] = sort(reshape(result_new_bin_p4,1,:));
+%  result_new_bin_p4 = reshape(result_new_bin_p4,x,y,z);
+result_new_bin_p4= reshape(result_new_bin_p4,1,x*y*z);
+[a,index]= sort(result_new_bin_p4);
+result_new_bin_p4 = reshape(a,x,y,z);
 disp("setp 3 转换图片!!  显示图片");
 imshow(result_new_bin_p4);
 
-% ---------------------------- -位置置乱--------------------------------------
-% 得到位置信息
-% 二维图片 
-index = 1:16;
-index = dec2bin(index,8);
-for i= 1:16
-    for j =1:4
-   if(mod(i,2)==0)
-   index(i,1)=num2str(bitxor(str2double(index(i,8)),str2double(index(i,1))));
-   index(i,2)=num2str(bitxor(str2double(index(i,7)),str2double(index(i,2))));
-   index(i,3)=num2str(bitxor(str2double(index(i,6)),str2double(index(i,3))));
-   index(i,4)=num2str(bitxor(str2double(index(i,5)),str2double(index(i,4))));
-%    else
-%    index(i,5)=num2str(bitxor(str2double(index(i,1)),str2double(index(i,5))));
-%    index(i,6)=num2str(bitxor(str2double(index(i,2)),str2double(index(i,6))));
-%    index(i,7)=num2str(bitxor(str2double(index(i,3)),str2double(index(i,7))));
-%    index(i,8)=num2str(bitxor(str2double(index(i,4)),str2double(index(i,8))));
-   end
-    end
-end
-
-
+% % ---------------------------- -位置置乱--------------------------------------
+% % 得到位置信息
+% % 二维图片 
+% index = 1:16;
+% index = dec2bin(index,8);
+% for i= 1:16
+%     for j =1:4
+%    if(mod(i,2)==0)
+%    index(i,1)=num2str(bitxor(str2double(index(i,8)),str2double(index(i,1))));
+%    index(i,2)=num2str(bitxor(str2double(index(i,7)),str2double(index(i,2))));
+%    index(i,3)=num2str(bitxor(str2double(index(i,6)),str2double(index(i,3))));
+%    index(i,4)=num2str(bitxor(str2double(index(i,5)),str2double(index(i,4))));
+% %    else
+% %    index(i,5)=num2str(bitxor(str2double(index(i,1)),str2double(index(i,5))));
+% %    index(i,6)=num2str(bitxor(str2double(index(i,2)),str2double(index(i,6))));
+% %    index(i,7)=num2str(bitxor(str2double(index(i,3)),str2double(index(i,7))));
+% %    index(i,8)=num2str(bitxor(str2double(index(i,4)),str2double(index(i,8))));
+%    end
+%     end
+% end
+% 
+% 
 
